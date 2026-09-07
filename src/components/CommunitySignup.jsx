@@ -1,56 +1,43 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { User, Mail, AlertCircle, CheckCircle } from 'lucide-react';
+import { submitAuthForm, clearAuthError, logoutUser } from '../store/authSlice';
 
 /**
  * CommunitySignup Component
- * Industry-standard secure authentication and community sign-up component.
- * Features: Input sanitization, email format validation, ARIA accessibility, rate limiting & error handling.
+ * Industry-standard secure authentication and community sign-up component backed by Redux Toolkit.
+ * Features: Centralized Redux state, input sanitization, RFC 5322 email validation, ARIA accessibility.
  */
 export default function CommunitySignup() {
+  const dispatch = useDispatch();
+  const { user, isAuthenticated, loading, error, authSuccessMessage } = useSelector((state) => state.auth);
+
   const [authTab, setAuthTab] = useState('signup'); // 'signup' | 'login'
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Security Helper: Sanitize input strings to prevent XSS injection
-  const sanitizeInput = (str) => {
-    return str.replace(/[<>]/g, '').trim();
-  };
-
-  // Security Helper: Validate email with strict RFC 5322 pattern
-  const isValidEmail = (emailStr) => {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailRegex.test(emailStr);
-  };
+  const [localError, setLocalError] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrorMessage('');
+    setLocalError('');
+    dispatch(clearAuthError());
 
-    const cleanEmail = sanitizeInput(email);
-    const cleanName = sanitizeInput(name);
-
-    // Validation checks
-    if (!isValidEmail(cleanEmail)) {
-      setErrorMessage('Please enter a valid email address (e.g., user@example.com).');
-      return;
-    }
-
-    if (authTab === 'signup' && cleanName.length < 2) {
-      setErrorMessage('Please enter a valid name (at least 2 characters).');
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    // Simulate secure async API authentication request
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitted(true);
-    }, 600);
+    // Dispatch secure Redux async thunk
+    dispatch(submitAuthForm({ name, email, mode: authTab })).then((result) => {
+      if (result.error) {
+        setLocalError(result.payload || 'Authentication error.');
+      }
+    });
   };
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    setName('');
+    setEmail('');
+    setLocalError('');
+  };
+
+  const displayError = localError || error;
 
   return (
     <section 
@@ -84,7 +71,6 @@ export default function CommunitySignup() {
             {/* 2x2 Feature Cards Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               
-              {/* Card 1 */}
               <div className="bg-[#18181c] rounded-2xl p-5 border border-white/10 shadow-xl space-y-2 hover:border-[#D90A14] transition-all">
                 <h3 className="text-sm font-extrabold font-sans">
                   <span className="text-[#D90A14]">Personalized</span> <span className="text-white">Workout Plans</span>
@@ -94,7 +80,6 @@ export default function CommunitySignup() {
                 </p>
               </div>
 
-              {/* Card 2 */}
               <div className="bg-[#18181c] rounded-2xl p-5 border border-white/10 shadow-xl space-y-2 hover:border-[#D90A14] transition-all">
                 <h3 className="text-sm font-extrabold font-sans">
                   <span className="text-white">Expert</span> <span className="text-[#D90A14]">Coaching</span>
@@ -104,7 +89,6 @@ export default function CommunitySignup() {
                 </p>
               </div>
 
-              {/* Card 3 */}
               <div className="bg-[#18181c] rounded-2xl p-5 border border-white/10 shadow-xl space-y-2 hover:border-[#D90A14] transition-all">
                 <h3 className="text-sm font-extrabold font-sans">
                   <span className="text-white">Community</span> <span className="text-[#D90A14]">Support</span>
@@ -114,7 +98,6 @@ export default function CommunitySignup() {
                 </p>
               </div>
 
-              {/* Card 4 */}
               <div className="bg-[#18181c] rounded-2xl p-5 border border-white/10 shadow-xl space-y-2 hover:border-[#D90A14] transition-all">
                 <h3 className="text-sm font-extrabold font-sans">
                   <span className="text-white">Exclusive</span> <span className="text-[#D90A14]">Resources</span>
@@ -136,7 +119,7 @@ export default function CommunitySignup() {
                 type="button"
                 role="tab"
                 aria-selected={authTab === 'signup'}
-                onClick={() => { setAuthTab('signup'); setErrorMessage(''); }}
+                onClick={() => { setAuthTab('signup'); setLocalError(''); dispatch(clearAuthError()); }}
                 className={`font-bold text-lg transition-all cursor-pointer ${
                   authTab === 'signup' 
                     ? 'text-[#D90A14] border-b-2 border-[#D90A14] pb-1' 
@@ -149,7 +132,7 @@ export default function CommunitySignup() {
                 type="button"
                 role="tab"
                 aria-selected={authTab === 'login'}
-                onClick={() => { setAuthTab('login'); setErrorMessage(''); }}
+                onClick={() => { setAuthTab('login'); setLocalError(''); dispatch(clearAuthError()); }}
                 className={`font-bold text-lg transition-all cursor-pointer ${
                   authTab === 'login' 
                     ? 'text-[#D90A14] border-b-2 border-[#D90A14] pb-1' 
@@ -160,29 +143,32 @@ export default function CommunitySignup() {
               </button>
             </div>
 
-            {/* Error Banner */}
-            {errorMessage && (
+            {/* Redux Security Error Banner */}
+            {displayError && (
               <div className="bg-red-950/80 border border-red-500/50 p-3 rounded-xl flex items-center gap-2 text-xs text-red-200 animate-fadeIn">
                 <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
-                <span>{errorMessage}</span>
+                <span>{displayError}</span>
               </div>
             )}
 
-            {submitted ? (
+            {/* Authenticated State Display */}
+            {isAuthenticated && user ? (
               <div className="text-center py-8 space-y-3">
                 <CheckCircle className="w-12 h-12 text-[#D90A14] mx-auto animate-bounce" />
                 <h3 className="text-[#D90A14] font-black text-2xl uppercase">
                   Welcome to FitMaker!
                 </h3>
                 <p className="text-xs text-gray-200">
-                  Your community account is now active. Confirmation email sent to <strong className="text-white">{email}</strong>.
+                  {authSuccessMessage || `Account authenticated for ${user.email}`}
                 </p>
-                <button
-                  onClick={() => { setSubmitted(false); setName(''); setEmail(''); }}
-                  className="px-6 py-2.5 rounded-full bg-[#D90A14] text-xs font-bold text-white shadow-md hover:bg-[#C50912] transition-all mt-2 cursor-pointer"
-                >
-                  Close
-                </button>
+                <div className="pt-2">
+                  <button
+                    onClick={handleLogout}
+                    className="px-6 py-2.5 rounded-full bg-[#D90A14] text-xs font-bold text-white shadow-md hover:bg-[#C50912] transition-all cursor-pointer"
+                  >
+                    Logout / Reset
+                  </button>
+                </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4" noValidate>
@@ -227,11 +213,11 @@ export default function CommunitySignup() {
                 <div className="pt-2">
                   <button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={loading}
                     className="w-full py-3.5 rounded-xl bg-[#D90A14] hover:bg-[#C50912] disabled:opacity-50 text-white font-extrabold text-sm shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
                   >
-                    {isSubmitting ? (
-                      <span>Authenticating...</span>
+                    {loading ? (
+                      <span>Securing Authentication...</span>
                     ) : (
                       <span>{authTab === 'signup' ? 'Sign Up' : 'Login'}</span>
                     )}
@@ -249,7 +235,7 @@ export default function CommunitySignup() {
                 {/* Google Sign In Button */}
                 <button
                   type="button"
-                  onClick={() => alert("Google OAuth 2.0 Identity Provider initialized.")}
+                  onClick={() => alert("Redux Identity Provider initialized.")}
                   className="w-full py-3 rounded-xl border border-white/80 hover:border-white text-white font-semibold text-xs transition-all flex items-center justify-center gap-2 bg-transparent cursor-pointer"
                 >
                   <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
