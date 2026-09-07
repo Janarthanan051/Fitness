@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowNavButtons } from './ui/UIComponents';
 import trainer1Img from '../assets/trainer-1.jpg';
 import trainer2Img from '../assets/trainer-2.jpg';
 import trainer3Img from '../assets/trainer-3.png';
@@ -52,23 +52,7 @@ export default function Trainers() {
             Meet Our <span className="text-[#D90A14]">Trainers</span>
           </h2>
 
-          {/* Navigation Arrow Marks matching site standard */}
-          <div className="flex items-center gap-2">
-            <button 
-              className="w-10 h-10 rounded-xl border border-white/40 bg-[#141416] hover:bg-[#D90A14] hover:border-[#D90A14] text-white flex items-center justify-center transition-all shadow-md group cursor-pointer"
-              aria-label="Previous trainers"
-              title="Previous"
-            >
-              <ArrowLeft className="w-5 h-5 text-white transition-colors" />
-            </button>
-            <button 
-              className="w-10 h-10 rounded-xl border border-white/40 bg-[#141416] hover:bg-[#D90A14] hover:border-[#D90A14] text-white flex items-center justify-center transition-all shadow-md group cursor-pointer"
-              aria-label="Next trainers"
-              title="Next"
-            >
-              <ArrowRight className="w-5 h-5 text-white transition-colors" />
-            </button>
-          </div>
+          <ArrowNavButtons onPrev={() => {}} onNext={() => {}} />
         </div>
 
         {/* Subtitle */}
