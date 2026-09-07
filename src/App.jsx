@@ -12,77 +12,33 @@ import BlogPosts from './components/BlogPosts';
 import CommunitySignup from './components/CommunitySignup';
 import Footer from './components/Footer';
 
+/**
+ * Main Application Root Component
+ * Modular layout composing Hero, Services, Pricing Plans, Fitness Tools, Testimonials, Trainers, Blog, Community Registration, and Footer.
+ */
 export default function App() {
   const [billingCycle, setBillingCycle] = useState('monthly');
   const [openFaq, setOpenFaq] = useState(0);
-  const [authTab, setAuthTab] = useState('signup');
-  const [activeTestiIndex, setActiveTestiIndex] = useState(0);
-  const [activeToolModal, setActiveToolModal] = useState(null);
-
-  // Tool Calculator States
-  const [heightCm, setHeightCm] = useState('175');
-  const [weightKg, setWeightKg] = useState('70');
-  const [calculatedScore, setCalculatedScore] = useState(null);
-
-  const testimonialsList = [
-    {
-      name: "Steven Howard",
-      role: "Member Client",
-      img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80",
-      quote: "I've been using FitMaker for the past three months, and I'm genuinely impressed. The website is easy to navigate, and everything is laid out clearly. I purchased the custom plan, and the personalized coaching has been a game-changer for me. My coach is incredibly supportive and always available to answer my questions.",
-      thumbs: [
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80",
-        "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&q=80"
-      ]
-    },
-    {
-      name: "Marcus Vance",
-      role: "Pro Athlete",
-      img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&q=80",
-      quote: "FitMaker completely transformed my strength routine! The personalized check-ins and expert macro guidance helped me build muscle and stay on track every single day.",
-      thumbs: [
-        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&q=80",
-        "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&q=80"
-      ]
-    }
-  ];
-
-  const trainersData = [
-    { name: "Sam Cole", role: "Personal Trainer", img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&q=80" },
-    { name: "Michael Harris", role: "Personal Trainer", img: "https://images.unsplash.com/photo-1567013127542-490d757e51fc?w=400&q=80" },
-    { name: "John Anderson", role: "Personal Trainer", img: "https://images.unsplash.com/photo-1583468982228-19f19164aee2?w=400&q=80" },
-    { name: "Tom Blake", role: "Personal Trainer", img: "https://images.unsplash.com/photo-1622551986251-92ea16d8bb95?w=400&q=80" }
-  ];
 
   const toggleFaq = (index) => {
     setOpenFaq(openFaq === index ? null : index);
   };
 
-  const calculateScore = () => {
-    const h = parseFloat(heightCm) / 100;
-    const w = parseFloat(weightKg);
-    if (h > 0 && w > 0) {
-      const score = (w / (h * h)).toFixed(1);
-      setCalculatedScore(score);
-    }
-  };
-
   return (
     <div className="bg-[#120a09] text-[#f5ede9] min-h-screen font-sans selection:bg-[#e8291c] selection:text-white relative overflow-x-hidden">
-      {/* Page Ambient Glow Spots matching artwork */}
+      {/* Page Ambient Glow Backdrop */}
       <div className="fixed top-12 -left-36 w-[550px] h-[550px] rounded-full bg-[#ff7a1a]/15 blur-[120px] pointer-events-none z-0"></div>
       <div className="fixed top-20 -right-36 w-[650px] h-[650px] rounded-full bg-[#e8291c]/20 blur-[130px] pointer-events-none z-0"></div>
 
       {/* ===== NAVBAR ===== */}
-      <Navbar onOpenAuth={(tab) => setAuthTab(tab)} />
+      <Navbar />
 
       {/* ===== HERO SECTION ===== */}
       <section className="relative w-full max-w-7xl mx-auto px-6 lg:px-16 pt-28 lg:pt-32 pb-16 flex flex-col lg:flex-row items-center justify-between gap-12 overflow-visible" id="home">
-        {/* Ambient Radial Glows matching design */}
         <div className="hero-glow"></div>
         <div className="hero-glow-left"></div>
 
-        {/* Left: Headline & CTAs */}
+        {/* Left: Headline & Call To Action Buttons */}
         <div className="flex-1 space-y-6 text-center z-10 flex flex-col items-center">
           <div className="text-center">
             <span className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white font-vazir tracking-tight block text-center mb-1">
@@ -116,9 +72,8 @@ export default function App() {
           </div>
         </div>
 
-        {/* Right: Hero Graphic with Glowing Backdrop & Stat Badges */}
+        {/* Right: Hero Trainer Graphic with Stat Badges */}
         <div className="relative flex-1 flex items-center justify-center min-w-[320px] lg:min-w-[500px] h-[520px]">
-          {/* Ambient Dots */}
           <div className="absolute top-[2%] left-[20%] w-24 h-24 rounded-full bg-[#CD4E17]/60 blur-xl pointer-events-none"></div>
           <div className="absolute bottom-[2%] right-[10%] w-20 h-20 rounded-full bg-[#D90A14]/70 blur-lg pointer-events-none"></div>
 
@@ -169,7 +124,6 @@ export default function App() {
 
       {/* ===== SERVICES SECTION ===== */}
       <section className="services relative py-24 overflow-hidden bg-[radial-gradient(ellipse_at_center,rgba(217,10,20,0.22)_0%,rgba(18,10,9,1)_70%)]" id="services">
-        {/* Soft Ambient Radial Glow matching media_1788449473934.png */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(217,10,20,0.28)_0%,rgba(205,78,23,0.12)_45%,transparent_75%)] pointer-events-none"></div>
 
         <div className="wrap relative z-10">
@@ -210,7 +164,6 @@ export default function App() {
 
       {/* ===== PLANS SECTION ===== */}
       <section className="plans relative overflow-visible py-20 bg-transparent" id="plans">
-        {/* Soft Ambient Radial Glow Backdrop matching media_1788451588895.jpg */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[550px] rounded-full bg-[radial-gradient(circle,rgba(217,10,20,0.3)_0%,rgba(205,78,23,0.1)_50%,transparent_75%)] pointer-events-none z-0"></div>
 
         <div className="wrap relative z-10">
@@ -223,20 +176,20 @@ export default function App() {
             </p>
           </div>
           
-          {/* Toggle Switch matching media_1788451588895.jpg */}
+          {/* Billing Cycle Toggle */}
           <div className="toggle-wrap flex justify-center mb-12">
             <div className="bg-[#120a09] border border-[#CD4E17]/40 p-1 rounded-full flex items-center shadow-lg">
               <button 
-                className={`px-8 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${billingCycle === 'monthly' ? 'bg-[#D90A14] text-white shadow-md' : 'text-gray-400 hover:text-white'}`} 
+                className={`px-8 py-2 rounded-full text-sm font-semibold transition-all duration-300 cursor-pointer ${billingCycle === 'monthly' ? 'bg-[#D90A14] text-white shadow-md' : 'text-gray-400 hover:text-white'}`} 
                 onClick={() => setBillingCycle('monthly')}
               >
-                Mounthly
+                Monthly
               </button>
               <button 
-                className={`px-8 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${billingCycle === 'annually' ? 'bg-[#D90A14] text-white shadow-md' : 'text-gray-400 hover:text-white'}`} 
+                className={`px-8 py-2 rounded-full text-sm font-semibold transition-all duration-300 cursor-pointer ${billingCycle === 'annually' ? 'bg-[#D90A14] text-white shadow-md' : 'text-gray-400 hover:text-white'}`} 
                 onClick={() => setBillingCycle('annually')}
               >
-                Annauly
+                Annually
               </button>
             </div>
           </div>
@@ -270,16 +223,16 @@ export default function App() {
                   <span className="text-3xl font-extrabold text-white">{billingCycle === 'annually' ? '990$' : '99$'}</span>
                   <span className="text-xs text-gray-400">/USDT</span>
                 </div>
-                <button 
-                  onClick={() => setAuthTab('signup')}
-                  className="w-full py-3.5 rounded-full bg-[#CD4E17] hover:bg-[#b54110] text-white font-bold text-sm shadow-md transition-all duration-300"
+                <a 
+                  href="#signup"
+                  className="block text-center w-full py-3.5 rounded-full bg-[#CD4E17] hover:bg-[#b54110] text-white font-bold text-sm shadow-md transition-all duration-300"
                 >
                   Choose This Plan
-                </button>
+                </a>
               </div>
             </div>
 
-            {/* CUSTOM PLAN (FEATURED - RED BORDER & RED GLOW) */}
+            {/* CUSTOM PLAN */}
             <div className="bg-[#1a080a] border-2 border-[#D90A14] rounded-2xl p-8 flex flex-col justify-between shadow-[0_0_30px_rgba(217,10,20,0.4)] transform md:-translate-y-2">
               <div>
                 <span className="text-[#D90A14] text-xs font-semibold uppercase tracking-wider block text-center mb-1">Package</span>
@@ -307,20 +260,20 @@ export default function App() {
                   <span className="text-3xl font-extrabold text-white">{billingCycle === 'annually' ? '1490$' : '149$'}</span>
                   <span className="text-xs text-gray-400">/USDT</span>
                 </div>
-                <button 
-                  onClick={() => setAuthTab('signup')}
-                  className="w-full py-3.5 rounded-full bg-[#D90A14] hover:bg-[#C50912] text-white font-bold text-sm shadow-md transition-all duration-300"
+                <a 
+                  href="#signup"
+                  className="block text-center w-full py-3.5 rounded-full bg-[#D90A14] hover:bg-[#C50912] text-white font-bold text-sm shadow-md transition-all duration-300"
                 >
                   Choose This Plan
-                </button>
+                </a>
               </div>
             </div>
 
-            {/* BEGGINER PLAN */}
+            {/* BEGINNER PLAN */}
             <div className="bg-[#1a080a] border-2 border-[#CD4E17] rounded-2xl p-8 flex flex-col justify-between shadow-xl">
               <div>
                 <span className="text-[#CD4E17] text-xs font-semibold uppercase tracking-wider block text-center mb-1">Package</span>
-                <h3 className="font-gagalin text-3xl text-white text-center mb-4 tracking-wide">BEGGINER PLAN</h3>
+                <h3 className="font-gagalin text-3xl text-white text-center mb-4 tracking-wide">BEGINNER PLAN</h3>
                 
                 <span className="text-[#CD4E17] text-xs font-semibold uppercase tracking-wider block text-center mb-1">Description</span>
                 <p className="text-gray-300 text-xs text-center mb-6 leading-relaxed">
@@ -343,12 +296,12 @@ export default function App() {
                   <span className="text-3xl font-extrabold text-white">{billingCycle === 'annually' ? '490$' : '49$'}</span>
                   <span className="text-xs text-gray-400">/USDT</span>
                 </div>
-                <button 
-                  onClick={() => setAuthTab('signup')}
-                  className="w-full py-3.5 rounded-full bg-[#CD4E17] hover:bg-[#b54110] text-white font-bold text-sm shadow-md transition-all duration-300"
+                <a 
+                  href="#signup"
+                  className="block text-center w-full py-3.5 rounded-full bg-[#CD4E17] hover:bg-[#b54110] text-white font-bold text-sm shadow-md transition-all duration-300"
                 >
                   Choose This Plan
-                </button>
+                </a>
               </div>
             </div>
           </div>
@@ -371,10 +324,10 @@ export default function App() {
       <CommunitySignup />
 
       {/* ===== FAQ SECTION ===== */}
-      <section className="faq relative overflow-visible" id="faq">
+      <section className="faq relative py-20 overflow-visible" id="faq">
         <div className="wrap">
-          <div className="section-head">
-            <h2>FAQ</h2>
+          <div className="section-head text-center mb-10">
+            <h2 className="text-4xl sm:text-5xl font-bold font-poppins text-white">FAQ</h2>
           </div>
           <div className="faq-list max-w-3xl mx-auto space-y-4">
             <div className={`faq-item bg-[#181818] border ${openFaq === 0 ? 'border-[#D90A14]' : 'border-white/10'} rounded-xl overflow-hidden transition-all`}>
